@@ -79,7 +79,7 @@ this.setState(
         {
           this.state.showMessage &&
 
-          <Alert variant="dark">
+          <Alert variant="dark" style ={{width:"50%"}}>
             {this.state.message}
           </Alert>
         }
