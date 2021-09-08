@@ -11,7 +11,6 @@ class Weather extends React.Component {
             <>
            
 
-
                 <Table style={{ width: '45rem' }}  bordered hover>
                     <thead>
                         <tr>
