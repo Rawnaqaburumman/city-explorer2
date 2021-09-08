@@ -4,6 +4,7 @@ import Info from './component/info';
 import axios from 'axios';
 import Alert from 'react-bootstrap/Alert'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Weather from './component/weather'
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +15,10 @@ class App extends React.Component {
      locationDetail: false,
       showMessage: false,
       message: '',
-      imageData:""
+      imageData:"",
+      weather: false,
+      weatherInfo: {}
+    
     }
   }
 
@@ -31,13 +35,27 @@ class App extends React.Component {
    
     const url = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&q=${this.state.locationName}&format=json`
 console.log(url)
+const ServerUrl =process.env.REACT_APP_SERVER_URL
+
+
+
+const weatherUrl = `${ServerUrl}/weather?city_name=${this.state.locationName.toLowerCase()}`;
+console.log(weatherUrl);
       let response = await axios.get(url);
-      console.log(response.data[0]);
+
+      console.log( ServerUrl);
+       const serverResponse = await axios.get(ServerUrl);
+       console.log(serverResponse);
+      let weatherData = await axios.get(weatherUrl);
+
+      console.log(response.data);
       this.setState({
         locationData: response.data[0],
         locationDetail: true,
         message: '',
-        message: false
+        message: false,
+        weatherInfo: weatherData.data,
+        weather: true,
       });
     
 
@@ -65,7 +83,8 @@ this.setState(
       this.setState({
         showMessage: true,
         message: err.message,
-        locationDetail: false
+        locationDetail: false,
+        weather: false,
 
       });
       console.log(this.state.message);
@@ -91,6 +110,14 @@ this.setState(
           
           />
         }
+        {
+         this.state.weather &&
+                        <Weather
+                        weather={this.state.weatherInfo}
+                       cityName= {this.state.locationName}
+                        />
+         }
+        
       </div>
     );
   }
