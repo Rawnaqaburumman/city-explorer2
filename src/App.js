@@ -4,90 +4,104 @@ import Info from './component/info';
 import axios from 'axios';
 import Alert from 'react-bootstrap/Alert'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Weather from './component/weather'
+import Weather from './component/weather';
+import Move from './component/movies';
+import Header from './component/header';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      locationName: '',
+      locationName: "",
+      data: "",
       locationData: {},
-     locationDetail: false,
+      maps_show: false,
+      location_show: false,
       showMessage: false,
       message: '',
-      imageData:"",
-      weather: false,
-      weatherInfo: {}
-    
+      imageData: "",
+      weather_show: false,
+      weatherInfo: {},
+      movies_show: false,
+      moviesInfo: []
+
     }
   }
 
-  handleName = async (name) => {
-    await this.setState({
+  handleName = (name) => {
+
+    this.setState({
       locationName: name
+
     })
     console.log(this.state.locationName);
-    this.takeData();
+    this.takeData(name);
   }
 
-  takeData = async () => {
+  takeData = async (name) => {
+
+
+    const url = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&q=${name}&format=json`
+    console.log(url)
+    const ServerUrl = process.env.REACT_APP_SERVER_URL
+
+    const weatherUrl = `${ServerUrl}/weather?city_name=${name.toLowerCase()}`;
+    console.log(weatherUrl);
+
+    const url2 = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&center=${this.state.locationData.lat},${this.state.locationData.lon}&zoom=17&format=jpg`
+    console.log(url2);
+
+    const moviesUrl = `${ServerUrl}/movie?city_name=${name.toLowerCase()}`;
+    console.log(moviesUrl)
+
+
+
+
+
     try {
-   
-    const url = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&q=${this.state.locationName}&format=json`
-console.log(url)
-const ServerUrl =process.env.REACT_APP_SERVER_URL
 
 
 
-const weatherUrl = `${ServerUrl}/weather?city_name=${this.state.locationName.toLowerCase()}`;
-console.log(weatherUrl);
       let response = await axios.get(url);
-
-      console.log( ServerUrl);
-       const serverResponse = await axios.get(ServerUrl);
-       console.log(serverResponse);
-      let weatherData = await axios.get(weatherUrl);
-
       console.log(response.data);
+      
+      let weatherData = await axios.get(weatherUrl);
+      console.log(weatherData)
+      let moviesData = await axios.get(moviesUrl);
+      // const responsetwo = await axios.get(url2);
+      console.log(moviesData);
+
+
+
+
       this.setState({
         locationData: response.data[0],
-        locationDetail: true,
-        message: '',
-        message: false,
+        location_show: true,
         weatherInfo: weatherData.data,
-        weather: true,
+        maps_show: true,
+        weather_show: true,
+        moviesInfo: moviesData.data,
+        movies_show: true,
+        error: false,
+
       });
-    
 
 
-
-
- const url2 = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&center=${[this.state.locationData.lat,this.state.locationData.lon]}&zoom=17&format=jpg`
-    console.log(url2);
-   const responsetwo = await axios.get(url2);
-  console.log(responsetwo);
-    
-this.setState(
-    {
-         imageData:responsetwo.request.responseURL
-        
-     });
-
-
+console.log(this.state.moviesInfo);
     }
-
 
 
     catch (err) {
-      
+      console.log("there is an error")
+
       this.setState({
-        showMessage: true,
-        message: err.message,
-        locationDetail: false,
-        weather: false,
+        maps_show: false,
+        error: true,
+        weather_show: false,
+        movies_show: false,
 
       });
-      console.log(this.state.message);
+
     }
   }
 
@@ -95,29 +109,60 @@ this.setState(
   render() {
     return (
       <div>
+
+
+        <Header/>
         {
           this.state.showMessage &&
 
-          <Alert variant="dark" style ={{width:"50%"}}>
+          <Alert variant="dark" style={{ width: "50%" }}>
             {this.state.message}
           </Alert>
         }
+
+
+
         <Theform handleName={this.handleName} />
         {
-          this.state.locationDetail &&
+
+
+
+
+          this.state.location_show &&
           <Info locationData={this.state.locationData}
-          imageData={this.state.imageData}
-          
+            imageData={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&center=${this.state.locationData.lat},${this.state.locationData.lon}&zoom=17&format=jpg`}
+
           />
         }
         {
-         this.state.weather &&
-                        <Weather
-                        weather={this.state.weatherInfo}
-                       cityName= {this.state.locationName}
-                        />
-         }
-        
+          this.state.weather_show &&
+          <Weather
+            weather={this.state.weatherInfo}
+            cityName={this.state.locationName}
+          />
+        }
+
+
+
+        {
+
+
+           this.state.movies_show &&
+          <Move
+          moviesInfo={this.state.moviesInfo}
+            locationName={this.state.locationName}
+
+          />
+        }
+
+
+
+
+
+
+
+
+
       </div>
     );
   }
