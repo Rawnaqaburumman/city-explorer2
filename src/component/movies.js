@@ -2,24 +2,26 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Card from 'react-bootstrap/Card';
 import CardColumns from 'react-bootstrap/CardColumns';
-
-
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 class Move extends React.Component {
 
 
-  
+
 
 
     render() {
+        console.log(this.props.moviesInfo)
         return (
             <>
                 <h3>Movies about {this.props.locationName} city!</h3>
 
-                <CardColumns>
+                <CardColumns style ={{padding:'100px'}}>
 
-
-                    {this.props.cityMovies.map((item) => {
+                <Row>
+                <Col md={{ span: 3, offset: 2 }}></Col>
+                    {this.props.moviesInfo.map((item) => {
 
                         return (
 
@@ -40,7 +42,7 @@ class Move extends React.Component {
 
                                         Overview : {item.overview}
                                         <br />
-                                         Average Votes : {item.averageVotes}
+                                        Average Votes : {item.averageVotes}
                                         <br />
                                         Total Votes : {item.totalVotes}
                                         <br />
@@ -55,7 +57,7 @@ class Move extends React.Component {
                         )
 
                     })}
-
+ </Row>
                 </CardColumns>
 
             </>

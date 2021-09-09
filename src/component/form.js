@@ -16,9 +16,10 @@ this.state={
         })
     }
     
-    handleSubmit=(e)=>{
+    handleSubmit= async(e)=>{
         e.preventDefault();
        this.props.handleName(this.state.locationName);
+       console.log(this.state.locationName);
     }
 
     render() {
