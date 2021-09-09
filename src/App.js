@@ -4,26 +4,31 @@ import Info from './component/info';
 import axios from 'axios';
 import Alert from 'react-bootstrap/Alert'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Weather from './component/weather'
+import Weather from './component/weather';
+import Move from './component/movies';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       locationName: '',
+      data:"",
       locationData: {},
+      map: false,
      locationDetail: false,
       showMessage: false,
       message: '',
       imageData:"",
       weather: false,
-      weatherInfo: {}
+      weatherInfo: {},
+      movies: false,
+      moviesInfo: []
     
     }
   }
 
   handleName = async (name) => {
-    await this.setState({
+   this.setState({
       locationName: name
     })
     console.log(this.state.locationName);
@@ -31,63 +36,65 @@ class App extends React.Component {
   }
 
   takeData = async () => {
+
+
+    const url = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&q=${this.state.locationName}&format=json`
+    console.log(url)
+    const ServerUrl =process.env.REACT_APP_SERVER_URL
+    
+const weatherUrl = `${ServerUrl}weather?city_name=${this.state.locationName.toLowerCase()}`;
+console.log(weatherUrl);
+
+const url2 = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&center=${[this.state.locationData.lat,this.state.locationData.lon]}&zoom=17&format=jpg`
+console.log(url2);
+
+const moviesUrl = `${ServerUrl}movies?city_name=$${this.state.locationName}`;
+
+
+
+
+
+
     try {
    
-    const url = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&q=${this.state.locationName}&format=json`
-console.log(url)
-const ServerUrl =process.env.REACT_APP_SERVER_URL
+    
+
+  let response = await axios.get(url);
+let weatherData = await axios.get(weatherUrl);
+let moviesData = await axios.get(moviesUrl);
+const responsetwo = await axios.get(url2);
+console.log(responsetwo);
 
 
 
-const weatherUrl = `${ServerUrl}/weather?city_name=${this.state.locationName.toLowerCase()}`;
-console.log(weatherUrl);
-      let response = await axios.get(url);
 
-      console.log( ServerUrl);
-       const serverResponse = await axios.get(ServerUrl);
-       console.log(serverResponse);
-      let weatherData = await axios.get(weatherUrl);
-
-      console.log(response.data);
       this.setState({
         locationData: response.data[0],
         locationDetail: true,
-        message: '',
-        message: false,
         weatherInfo: weatherData.data,
+        map:true,
         weather: true,
+        movies: false,
+        moviesInfo: moviesData.data,
+        error:false,
+        imageData:responsetwo.request.responseURL
       });
     
-
-
-
-
- const url2 = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&center=${[this.state.locationData.lat,this.state.locationData.lon]}&zoom=17&format=jpg`
-    console.log(url2);
-   const responsetwo = await axios.get(url2);
-  console.log(responsetwo);
-    
-this.setState(
-    {
-         imageData:responsetwo.request.responseURL
-        
-     });
 
 
     }
 
 
-
     catch (err) {
       
       this.setState({
-        showMessage: true,
-        message: err.message,
-        locationDetail: false,
-        weather: false,
+        map:false,
+      error:true,
+      weather: false,
+      movies: false,
 
       });
-      console.log(this.state.message);
+     
     }
   }
 
@@ -102,8 +109,15 @@ this.setState(
             {this.state.message}
           </Alert>
         }
+
+
+        
         <Theform handleName={this.handleName} />
         {
+
+
+
+
           this.state.locationDetail &&
           <Info locationData={this.state.locationData}
           imageData={this.state.imageData}
@@ -118,6 +132,24 @@ this.setState(
                         />
          }
         
+
+
+        {this.state.movies &&
+                    <Move
+                        cityMovies={this.state.moviesInfo}
+                        locationName={this.state.locationName}
+
+                    />
+                }
+
+
+
+
+
+
+
+
+
       </div>
     );
   }
