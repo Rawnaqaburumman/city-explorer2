@@ -24,13 +24,13 @@ this.state={
 
     render() {
         return (
-            <div style ={{padding:"100px" ,width:"30%"}} >
-                <Form className="FormR" onSubmit={this.handleSubmit} style ={{color:'black', fontWeight:"bolder"}}>
+            <div style ={{width:"15%" , position:"absolute" , left:"680px" , top: "193px"}} >
+                <Form className="FormR" onSubmit={this.handleSubmit} >
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Enter The City: </Form.Label>
-                        <Form.Control type="text"  onChange={this.getLocation} placeholder="Enter city name" />
+                        <Form.Label style={{fontWeight:"bolder"}} >Enter The City: </Form.Label>
+                        <Form.Control type="text"  onChange={this.getLocation} placeholder="Enter city name" style={{borderBlockWidth:"10px" , borderBlockColor:"burlywood"}}  />
                     </Form.Group>
-                    <Button variant="primary" type="submit" style={{color:"black" , backgroundColor:"greenyellow"}}>
+                    <Button variant="primary" type="submit" style={{color:"wight" , backgroundColor:"black"}}>
                         Explore!
                     </Button>
                 </Form>

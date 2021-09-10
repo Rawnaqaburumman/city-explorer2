@@ -8,9 +8,10 @@ class Weather extends React.Component {
     render() {
         return (
             <>
+<h2> Weather status in city</h2>
 
-
-                <Table style={{ width: '60rem' }} bordered hover>
+                <Table style={{width: '40rem', position:"absolute", top:"200px"}} striped bordered hover variant="dark" size="sm">
+                    
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -18,18 +19,6 @@ class Weather extends React.Component {
                         </tr>
                     </thead>
 
-
-                    <tr>
-                        <td>{this.props.weather[0].date}</td>
-                        <td>{this.props.weather[0].description}</td>
-                    </tr>
-                    <tr>
-                        <td>{this.props.weather[1].date}</td>
-                        <td>{this.props.weather[1].description}</td>
-                    </tr>     <tr>
-                        <td>{this.props.weather[2].date}</td>
-                        <td>{this.props.weather[2].description}</td>
-                    </tr>
                     <tbody>
 
                         {this.props.weather.map((item) => {
