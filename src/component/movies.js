@@ -15,13 +15,14 @@ class Move extends React.Component {
         console.log(this.props.moviesInfo)
         return (
             <>
-                <h3>Movies about {this.props.locationName} city!</h3>
+             
 
-                <CardColumns >
+                <CardColumns style= {{position:"absolute" , top:"900px"}} >
+                <h3>Movies about {this.props.locationName} city!</h3>
                     {/* style ={{padding:'100px'}} */}
 
-                <Row>
-                <Col md={"3"}></Col>
+                    <Row xs={1} md={3} className="g-4">
+          
                     {this.props.moviesInfo.map((item) => {
 
                         return (
