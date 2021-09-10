@@ -17,10 +17,11 @@ class Move extends React.Component {
             <>
                 <h3>Movies about {this.props.locationName} city!</h3>
 
-                <CardColumns style ={{padding:'100px'}}>
+                <CardColumns >
+                    {/* style ={{padding:'100px'}} */}
 
                 <Row>
-                <Col md={{ span: 3, offset: 2 }}></Col>
+                <Col md={"3"}></Col>
                     {this.props.moviesInfo.map((item) => {
 
                         return (
